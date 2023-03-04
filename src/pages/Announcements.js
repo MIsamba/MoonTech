@@ -47,7 +47,7 @@ export default function Announcements() {
     e.preventDefault()
     var name = e.target.name.value
     axios
-      .delete(`${PUBLIC_API_URL}/path/post/${name}/delete/`)
+      .delete(`${PUBLIC_API_URL}/path/posts/${name}/delete/`)
       .then((res) => {
         fetchPosts()
         history('/announcements')
@@ -64,7 +64,7 @@ export default function Announcements() {
     data.append('photo', file)
     data.append('data', JSON.stringify(formData))
     axios
-      .post(`${PUBLIC_API_URL}/path/post/`, data)
+      .post(`${PUBLIC_API_URL}/path/posts/`, data)
       .then((res) => {
         alert('Announcement Posted Successfully')
         fetchPosts()
@@ -82,7 +82,7 @@ export default function Announcements() {
     data.append('photo', updatefile)
     data.append('data', JSON.stringify(formupdateData))
     axios
-      .post(`${PUBLIC_API_URL}/path/post/${name}/update/`, data)
+      .post(`${PUBLIC_API_URL}/path/posts/${name}/update/`, data)
       .then((res) => {
         alert('Announcement Updated Successfully')
         fetchPosts()
@@ -99,7 +99,7 @@ export default function Announcements() {
     var postname = e.target.name.value
 
     axios
-      .get(`${PUBLIC_API_URL}/path/post/${postname}/`)
+      .get(`${PUBLIC_API_URL}/path/posts/${postname}/`)
       .then((res) => {
         setfetchpost(res.data[0])
       })
