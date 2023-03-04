@@ -1,0 +1,35 @@
+import { getMonth } from "../utils";
+import CalendarHeader from "../components/Calendar/CalendarHeader";
+import Sidebar from "../components/Sidebar";
+import Month from "../components/Calendar/Month";
+import GlobalContext from "../context/GlobalContext";
+import EventModal from "../components/Calendar/EventModal";
+import React, { useState, useContext, useEffect } from "react";
+
+export default function Home() {
+
+  const [currenMonth, setCurrentMonth] = useState(getMonth());
+  const { monthIndex, showEventModal } = useContext(GlobalContext);
+
+  useEffect(() => {
+    setCurrentMonth(getMonth(monthIndex));
+  }, [monthIndex]);
+
+  return (
+    <div>
+      <Sidebar>
+      <React.Fragment>
+      {showEventModal && <EventModal />}
+
+      <div className="h-screen flex flex-col">
+        <CalendarHeader />
+        <div className="flex flex-1">
+          {/* <Sidebar /> */}
+          <Month month={currenMonth} />
+        </div>
+      </div>
+    </React.Fragment>
+      </Sidebar>
+    </div>
+  )
+}
