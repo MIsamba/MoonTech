@@ -56,7 +56,7 @@ export default function Login() {
         }
         else{
              setLoader(false)
-            setSessionCookie({ email });
+            setSessionCookie({ email,id:obj[0]._id });
             console.log("success")
             //window.location.reload()
             

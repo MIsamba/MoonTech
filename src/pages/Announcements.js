@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { PUBLIC_API_URL } from '../config/index'
 import { useNavigate } from 'react-router-dom'
+import {  getSessionCookie } from "../session"
 
 export default function Announcements() {
   const [data, setData] = useState([])
@@ -13,8 +14,12 @@ export default function Announcements() {
     axios
       .get(`${PUBLIC_API_URL}/path/posts/`)
       .then((res) => {
+        const teacher = getSessionCookie().id;
+        var pst= res.data;
         console.log(res.data)
-        setData(res.data)
+        var obj = pst.filter(o => o.teacher === teacher) ;
+        console.log("obj",obj)
+        setData(obj)
       })
       .catch((err) => console.log(err))
   }
@@ -44,33 +49,46 @@ export default function Announcements() {
   const loading = false
 
   const onSubmitDelete = async (e) => {
-    e.preventDefault()
-    var name = e.target.name.value
+    // e.preventDefault()
+    // var name = e.target.name.value
+    var id = e;
+    console.log("id",id)
     axios
-      .delete(`${PUBLIC_API_URL}/path/posts/${name}/delete/`)
+      .delete(`${PUBLIC_API_URL}/path/posts/${id}/delete/`)
       .then((res) => {
         fetchPosts()
         history('/announcements')
+        console.log("success")
+
       })
       .catch((err) => {
         console.log(err)
+        console.log("err")
       })
   }
 
   const onSubmit = async (e) => {
     e.preventDefault()
     const data = new FormData()
-
+    const teacher = getSessionCookie().id;
+    console.log("teacher",teacher);
+    data.append('teacher', teacher)
+    data.append('title', formData.title)
+    data.append('description', formData.description)
     data.append('photo', file)
-    data.append('data', JSON.stringify(formData))
+    console.log("data",data);
+
+    // data.append('data', JSON.stringify(formData))
     axios
       .post(`${PUBLIC_API_URL}/path/posts/`, data)
       .then((res) => {
         alert('Announcement Posted Successfully')
         fetchPosts()
         history('/announcements')
+        setShowModal(false)
       })
       .catch((err) => {
+        console.log("err")
         console.log(err)
       })
   }
@@ -95,7 +113,7 @@ export default function Announcements() {
   const [fetchpost, setfetchpost] = useState('')
 
   const onGetSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault() 
     var postname = e.target.name.value
 
     axios
@@ -136,16 +154,16 @@ export default function Announcements() {
                   <div className="relative flex-auto">
                     <form
                       className="bg-white shadow-md rounded px-8 pt-6 pb-8 w-full"
-                      // onSubmit={onSubmit}
-                      onSubmit={(e) => {
-                        onUpdateSubmit(e, fetchpost.name)
-                      }}
+                      onSubmit={onSubmit}
+                      // onSubmit={(e) => {
+                      //   onUpdateSubmit(e, fetchpost.name)
+                      // }}
                     >
                       <input
                         className="bg-gray-200 appearance-none  rounded w-full py-3 px-3 text-grey"
                         type="text"
-                        id="name"
-                        name="name"
+                        id="title"
+                        name="title"
                         placeholder="Title"
                         onChange={onChange}
                         required
@@ -252,7 +270,7 @@ export default function Announcements() {
                 </div>
                 <div class="px-6 pt-4 pb-2">
                   {/* <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#photography</span> */}
-                  <span onClick={() => setShowModal(true)} class="inline-block bg-red-600 rounded-full px-3 py-1 text-sm font-semibold text-white mr-2 mb-2">Delete</span>
+                  <span onClick={() => onSubmitDelete(e._id)} class="inline-block bg-red-600 rounded-full px-3 py-1 text-sm font-semibold text-white mr-2 mb-2">Delete</span>
                   <span onClick={() => setShowModal(true)} class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">Edit</span>
                 </div>
               </div>
