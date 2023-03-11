@@ -51,11 +51,12 @@ export default function Announcements() {
   const onSubmitDelete = async (e) => {
     // e.preventDefault()
     // var name = e.target.name.value
-    var id = e;
+    var id = e._id;
     console.log("id",id)
     axios
-      .delete(`${PUBLIC_API_URL}/path/posts/${id}/delete/`)
+      .delete(`${PUBLIC_API_URL}/path/posts/${id}/`)
       .then((res) => {
+        alert('Announcement DEleted Successfully')
         fetchPosts()
         history('/announcements')
         console.log("success")
@@ -72,8 +73,10 @@ export default function Announcements() {
     const data = new FormData()
     const teacher = getSessionCookie().id;
     console.log("teacher",teacher);
+    console.log("title",formData.title);
+    console.log("description",formData.description);
     data.append('teacher', teacher)
-    data.append('title', formData.title)
+    data.append('tittle', formData.title)
     data.append('description', formData.description)
     data.append('photo', file)
     console.log("data",data);
@@ -90,6 +93,8 @@ export default function Announcements() {
       .catch((err) => {
         console.log("err")
         console.log(err)
+        alert('Announcement Poste fail')
+        setShowModal(false)
       })
   }
 
@@ -100,7 +105,7 @@ export default function Announcements() {
     data.append('photo', updatefile)
     data.append('data', JSON.stringify(formupdateData))
     axios
-      .post(`${PUBLIC_API_URL}/path/posts/${name}/update/`, data)
+      .post(`${PUBLIC_API_URL}/path/postview/${name}/update/`, data)
       .then((res) => {
         alert('Announcement Updated Successfully')
         fetchPosts()
@@ -270,7 +275,7 @@ export default function Announcements() {
                 </div>
                 <div class="px-6 pt-4 pb-2">
                   {/* <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#photography</span> */}
-                  <span onClick={() => onSubmitDelete(e._id)} class="inline-block bg-red-600 rounded-full px-3 py-1 text-sm font-semibold text-white mr-2 mb-2">Delete</span>
+                  <span onClick={() => onSubmitDelete(e)} class="inline-block bg-red-600 rounded-full px-3 py-1 text-sm font-semibold text-white mr-2 mb-2">Delete</span>
                   <span onClick={() => setShowModal(true)} class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">Edit</span>
                 </div>
               </div>
