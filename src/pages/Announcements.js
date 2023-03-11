@@ -56,7 +56,7 @@ export default function Announcements() {
     axios
       .delete(`${PUBLIC_API_URL}/path/posts/${id}/`)
       .then((res) => {
-        alert('Announcement DEleted Successfully')
+        alert('Announcement Deleted Successfully')
         fetchPosts()
         history('/announcements')
         console.log("success")
