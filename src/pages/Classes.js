@@ -48,9 +48,19 @@ export default function Classes() {
 
   const onSubmit = async (e) => {
     e.preventDefault()
+    setLoader(true)
+    const data = new FormData()
 
+    data.append('tutor', formData.tutor)
+    data.append('course_name', formData.course_name)
+    data.append('venue', formData.venue)
+    data.append('phone_no', formData.phone_no)
+    data.append('assistance_tutor', formData.assistance_tutor)
+    data.append('total_students', formData.total_students)
+    data.append('course_code', formData.course_code)
+    console.log("data",data);
     axios
-      .post(`${PUBLIC_API_URL}/path/sessionview/`, formData)
+      .post(`${PUBLIC_API_URL}/path/sessions/`, data)
       .then((res) => {
         fetchClasses()
         alert('Class Added')
@@ -96,6 +106,7 @@ export default function Classes() {
                       <input
                         placeholder="Tutor"
                         className="bg-gray-200 appearance-none  rounded w-full py-3 px-3 text-grey"
+                        id="tutor"
                         name="tutor"
                         onChange={onChange}
                       />
@@ -104,6 +115,7 @@ export default function Classes() {
                           <input
                             className="bg-gray-200 appearance-none border rounded w-full py-2 px-3 text-black"
                             placeholder="Course Name"
+                            id="course_name"
                             name="course_name"
                             onChange={onChange}
                           />
@@ -112,6 +124,7 @@ export default function Classes() {
                           <input
                             className="bg-gray-200 appearance-none border rounded w-full py-2 px-3 text-black"
                             placeholder="Course Code"
+                            id="course_code"
                             name="course_code"
                             onChange={onChange}
                             type="number"
@@ -121,6 +134,7 @@ export default function Classes() {
                           <input
                             className="bg-gray-200 appearance-none border rounded w-full py-2 px-3 text-black"
                             placeholder="Venue"
+                            id="venue"
                             name="venue"
                             onChange={onChange}
                           />
@@ -129,6 +143,7 @@ export default function Classes() {
                           <input
                             className="bg-gray-200 appearance-none border rounded w-full py-2 px-3 text-black"
                             placeholder="Phone Number"
+                            id="phone_no"
                             name="phone_no"
                             onChange={onChange}
                             type="number"
@@ -138,6 +153,7 @@ export default function Classes() {
                           <input
                             className="bg-gray-200 appearance-none border rounded w-full py-2 px-3 text-black"
                             placeholder="Assistance Tutor"
+                            id="assistance_tutor"
                             name="assistance_tutor"
                             onChange={onChange}
                           />
@@ -146,6 +162,7 @@ export default function Classes() {
                           <input
                             className="bg-gray-200 appearance-none border rounded w-full py-2 px-3 text-black"
                             placeholder="Total Students"
+                            id="total_students"
                             name="total_students"
                             onChange={onChange}
                             type="number"
@@ -158,7 +175,7 @@ export default function Classes() {
                           type="submit"
                         // onClick={() => setShowModal(false)}
                         >
-                          Upload
+                          {loader?"Processing":"Upload"}
                         </button>
                       </div>
                     </form>
