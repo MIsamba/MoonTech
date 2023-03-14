@@ -10,17 +10,20 @@ export default function Assignments() {
   const history = useNavigate()
   const [completed_data, setCompletedData] = useState([])
   const [pending_data, setPendingData] = useState([])
+  
 
     // Simple Loading indicator
     const [loader, setLoader] = useState(true)
 
   const fetchCompletedAssignments = () => {
     axios
-      .get(`${PUBLIC_API_URL}/path/filterassignment/yes/`)
+      .get(`${PUBLIC_API_URL}/path/assignments/`)
       .then((res) => {
         // console.log(' completed')
         // console.log(res)
-        setCompletedData(res.data)
+        var asnmt= res.data;
+        var obj = asnmt.filter(o => o.completed === true) ;
+        setCompletedData(obj)
         setLoader(false)
         
       })
@@ -28,11 +31,13 @@ export default function Assignments() {
   }
   const fetchPendingAssignments = () => {
     axios
-      .get(`${PUBLIC_API_URL}/path/filterassignment/no/`)
+      .get(`${PUBLIC_API_URL}/path/assignments/`)
       .then((res) => {
         // console.log('Pending ')
         // console.log(res)
-        setPendingData(res.data)
+        var asnmt= res.data;
+        var obj = asnmt.filter(o => o.completed === false) ;
+        setPendingData(obj)
         setLoader(false)
 
       })
@@ -54,21 +59,35 @@ export default function Assignments() {
   }
 
   const onSubmit = async (e) => {
-    // e.preventDefault()
+    setLoader(true)
+     e.preventDefault()
     const data = new FormData()
 
-    data.append('photo', file)
-    data.append('data', JSON.stringify(formData))
+    data.append('course', formData.course_name)
+    data.append('description', formData.title)
+    data.append('due', formData.due_date)
+    data.append('attachment', file)
+    console.log("data",data);
+    console.log("course", formData.course_name);
+    console.log("description", formData.title);
+    console.log("due", formData.due_date);
+    // setShowModal(false);
+    // data.append('data', JSON.stringify(formData))
     axios
       .post(`${PUBLIC_API_URL}/path/assignments/`, data)
       .then((res) => {
-        if (res.status === 200) {
-          fetchPendingAssignments()
-          fetchCompletedAssignments()
+        setShowModal(false);
+        // if (res.status === 200) {
+          console.log("success")
+          alert('Assignment posted Successfully')
+           fetchPendingAssignments()
+           fetchCompletedAssignments()
+           setLoader(false);
           history('/assignments')
-        }
+        
       })
       .catch((err) => {
+        console.log("err")
         console.log(err)
       })
   }
@@ -99,6 +118,7 @@ export default function Assignments() {
                       <input
                         placeholder="Title"
                         className="shadow appearance-none border rounded w-full py-2 px-1 text-black"
+                        id="title"
                         name="title"
                         onChange={onChange}
                       />
@@ -107,6 +127,7 @@ export default function Assignments() {
                           <input
                             className="shadow appearance-none border rounded w-full py-2 px-1 text-black"
                             placeholder="Course Name"
+                            id="course_name"
                             name="course_name"
                             onChange={onChange}
                           />
@@ -114,8 +135,9 @@ export default function Assignments() {
                         <div className="w-1/3 px-5">
                           <input
                             className="shadow appearance-none border rounded w-full py-2 px-1 text-black"
-                            type="date"
+                            type="datetime-local"
                             placeholder="Due Date"
+                            id="due_date"
                             name="due_date"
                             onChange={onChange}
                           />
@@ -131,12 +153,13 @@ export default function Assignments() {
                         </div>
                       </div>
                       <div className="flex items-center justify-center p-6 border-t border-solid border-blueGray-200 rounded-b">
+                        
                         <button
                           className="px-4 py-1 text-[#00000099] font-bold tracking-wider border-2 border-[#9FC6FF] bg-[#9FC6FF] hover:border-[#9FC6FF] hover:bg-transparent hover:text-[#9FC6FF] hover:font-bold hover:border-2 rounded-3xl"
                           type="submit"
-                          onClick={() => onSubmit()}
+                          onClick={onSubmit}
                         >
-                          Upload
+                          {loader?"Processing":"Upload"}
                         </button>
                       </div>
                     </form>
